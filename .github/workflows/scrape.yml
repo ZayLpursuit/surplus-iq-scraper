@@ -1,0 +1,38 @@
+name: NJ Surplus Funds Scraper
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 7am ET (UTC-4)
+    - cron: '0 18 * * *'   # 2pm ET (UTC-4)
+  workflow_dispatch:        # allows manual trigger from GitHub
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python3 surplus_scraper.py
+```
+
+`Ctrl+O` → Enter → `Ctrl+X`
+
+Then push it:
+```
+git add .github/
+git commit -m "Add GitHub Actions scraper workflow"
+k
