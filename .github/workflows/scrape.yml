@@ -2,14 +2,13 @@ name: NJ Surplus Funds Scraper
 
 on:
   schedule:
-    - cron: '0 11 * * *'   # 7am ET (UTC-4)
-    - cron: '0 18 * * *'   # 2pm ET (UTC-4)
-  workflow_dispatch:        # allows manual trigger from GitHub
+    - cron: '0 11 * * *'
+    - cron: '0 18 * * *'
+  workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,6 +26,3 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: python3 surplus_scraper.py
-```
-
-
