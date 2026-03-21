@@ -1,0 +1,8 @@
+.env
+surplus_leads.db
+*.xlsx
+~$*.xlsx
+scraper_log.txt
+__pycache__/
+*.pyc
+.DS_Store
