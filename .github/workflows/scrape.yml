@@ -29,10 +29,4 @@ jobs:
         run: python3 surplus_scraper.py
 ```
 
-`Ctrl+O` → Enter → `Ctrl+X`
 
-Then push it:
-```
-git add .github/
-git commit -m "Add GitHub Actions scraper workflow"
-k
