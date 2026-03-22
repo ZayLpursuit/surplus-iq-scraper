@@ -201,15 +201,12 @@ def get_listing(session, county):
 
     soup = BeautifulSoup(r.text, "html.parser")
 
+    # For ALL counties use the base URL — this preserves the Status column
+    # Form counties were previously filtered via URL but that stripped the Status column
+    listing_url = base_url
     if has_search_form(soup):
-        listing_url = f"{base_url}&StatusType=Sold%5CCancelled&SaleDate=&SaleMonth="
+        # Re-fetch without status filter to get full table with Status column intact
         session.headers.update({"Referer": base_url})
-        r = fetch(session, listing_url)
-        if not r:
-            return [], listing_url
-        soup = BeautifulSoup(r.text, "html.parser")
-    else:
-        listing_url = base_url
 
     cases = []
     for row in soup.select("table tr"):
