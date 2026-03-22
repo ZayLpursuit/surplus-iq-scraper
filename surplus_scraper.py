@@ -289,12 +289,22 @@ def get_detail(session, case):
     if not case["Case #"]:
         case["Case #"] = case["Sheriff #"]
 
-    # Current status
-    status_match = re.search(r'Current Status[:\s|]+([^\|]+)', body_text, re.IGNORECASE)
+    # Current status — try multiple patterns to extract reliably
+    # Pattern 1: "Current Status:Purchased - 3rd Party - 2/5/2025"
+    status_match = re.search(
+        r'Current Status[:\s|]+([A-Za-z][^\|\d\)][^\|]{2,40}?)(?:\s*-\s*\d{1,2}/\d{1,2}/\d{4})?(?:\||\))',
+        body_text, re.IGNORECASE
+    )
     if status_match:
-        current = status_match.group(1).strip().rstrip(")")
-        if current:
+        current = status_match.group(1).strip().rstrip("-").strip()
+        if current and "status" not in current.lower():
             case["Status"] = current
+    # Pattern 2: look in fields table for "status" label
+    if not case["Status"] or case["Status"] == "See detail":
+        for label, value in fields.items():
+            if label == "status" and value:
+                case["Status"] = value
+                break
 
     # Approx Judgment
     judg_match = re.search(
